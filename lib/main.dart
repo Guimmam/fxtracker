@@ -6,6 +6,8 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:fxtracker/models/currency_model.dart';
 import 'package:fxtracker/repos/repositories.dart';
 
+import 'currency_details/bloc/currency_details_bloc.dart';
+import 'home/bloc/home_bloc.dart';
 import 'home/home_screen.dart';
 
 void main() {
@@ -41,9 +43,30 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
           primarySwatch: Colors.blue,
         ),
-        home: RepositoryProvider(
-          create: (context) => CurrencyList(),
-          child: const Home(),
-        ));
+        home: MultiRepositoryProvider(
+            providers: [
+              RepositoryProvider(
+                create: (context) => CurrencyListRepository(),
+              ),
+              RepositoryProvider(
+                create: (context) => CurrencyDetailsRepository(),
+              ),
+            ],
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) => HomeBloc(
+                      RepositoryProvider.of<CurrencyListRepository>(context))
+                    ..add(LoadHomeEvent()),
+                ),
+                BlocProvider(
+                  create: (context) => CurrencyDetailsBloc(
+                      currencyDetails:
+                          RepositoryProvider.of<CurrencyDetailsRepository>(
+                              context)),
+                ),
+              ],
+              child: Home(),
+            )));
   }
 }

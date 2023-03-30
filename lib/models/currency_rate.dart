@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-class CurrencyRates {
-  CurrencyRates({
+class CurrencyRate {
+  CurrencyRate({
     required this.table,
     required this.currency,
     required this.code,
@@ -13,12 +13,12 @@ class CurrencyRates {
   final String code;
   final List<Rate> rates;
 
-  factory CurrencyRates.fromRawJson(String str) =>
-      CurrencyRates.fromJson(json.decode(str));
+  factory CurrencyRate.fromRawJson(String str) =>
+      CurrencyRate.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory CurrencyRates.fromJson(Map<String, dynamic> json) => CurrencyRates(
+  factory CurrencyRate.fromJson(Map<String, dynamic> json) => CurrencyRate(
         table: json["table"],
         currency: json["currency"],
         code: json["code"],

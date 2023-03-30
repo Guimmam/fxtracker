@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:fxtracker/models/currency_model.dart';
 import 'package:http/http.dart';
 
-import '../models/currency_rates.dart';
+import '../models/currency_rate.dart';
 
-class CurrencyList {
+class CurrencyListRepository {
   String endpoint = "https://api.nbp.pl/api/exchangerates/tables/A?format=json";
   Future<List<CurrencyModel>> getCurrencyList() async {
     Response response = await get(Uri.parse(endpoint));
@@ -19,16 +19,16 @@ class CurrencyList {
   }
 }
 
-class CurrencyDetails {
-  Future<CurrencyRates> getCurrencyRates(String code, String days) async {
+class CurrencyDetailsRepository {
+  Future<CurrencyRate> getCurrencyRates(String code, int days) async {
     String endpoint =
         "http://api.nbp.pl/api/exchangerates/rates/A/$code/last/$days/";
     Response response = await get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> result = jsonDecode(response.body)[0];
+      final Map<String, dynamic> result = jsonDecode(response.body);
 
-      return CurrencyRates.fromJson(result);
+      return CurrencyRate.fromJson(result);
     } else {
       throw Exception(response.reasonPhrase);
     }

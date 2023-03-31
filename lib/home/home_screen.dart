@@ -20,9 +20,16 @@ class Home extends StatelessWidget {
           }
           if (state is HomeLoadedState) {
             List<CurrencyModel> currencyList = state.currencyList;
+
             return ListView.builder(
-              itemCount: currencyList.length,
-              itemBuilder: ((context, index) => Padding(
+                itemCount: currencyList.length,
+                itemBuilder: ((context, index) {
+                  String currency = currencyList[index]
+                          .currency
+                          .substring(0, 1)
+                          .toUpperCase() +
+                      currencyList[index].currency.substring(1);
+                  return Padding(
                     padding: EdgeInsets.all(5),
                     child: InkWell(
                       onTap: () {
@@ -37,8 +44,8 @@ class Home extends StatelessWidget {
                               ),
                               child: CurrencyDetails(
                                   code: currencyList[index].code,
-                                  currency: currencyList[index].currency,
-                                  days: 30),
+                                  currency: currency,
+                                  days: 180),
                             ),
                           ),
                         );
@@ -52,20 +59,13 @@ class Home extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(currencyList[index]
-                                          .currency
-                                          .substring(0, 1)
-                                          .toUpperCase() +
-                                      currencyList[index]
-                                          .currency
-                                          .substring(1)),
+                                  Text(currency),
                                   Text(currencyList[index].code),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Text(currencyList[index].mid.toString() +
-                                      " zł"),
+                                  Text("${currencyList[index].mid} zł"),
                                 ],
                               )
                             ],
@@ -73,8 +73,8 @@ class Home extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )),
-            );
+                  );
+                }));
           }
           return Container();
         },

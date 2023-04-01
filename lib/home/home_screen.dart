@@ -45,7 +45,7 @@ class Home extends StatelessWidget {
                               child: CurrencyDetails(
                                   code: currencyList[index].code,
                                   currency: currency,
-                                  days: 180),
+                                  days: 90),
                             ),
                           ),
                         );

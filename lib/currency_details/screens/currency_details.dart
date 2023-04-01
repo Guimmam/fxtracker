@@ -8,6 +8,8 @@ import '../bloc/currency_details_bloc.dart';
 import '../widgets/chart.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/chart2.dart';
+
 class CurrencyDetails extends StatefulWidget {
   final String currency;
   final String code;
@@ -74,19 +76,24 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
                     code: widget.code,
                   ),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: state.currencyRate.rates.length,
-                      itemBuilder: (context, index) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(formatDate(
-                                state.currencyRate.rates[index].effectiveDate)),
-                            Text(
-                                state.currencyRate.rates[index].mid.toString()),
-                          ],
-                        );
-                      },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ListView.builder(
+                        itemCount: state.currencyRate.rates.length,
+                        itemBuilder: (context, index) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "1 ${widget.code} = ${state.currencyRate.rates[index].mid} zł",
+                                textAlign: TextAlign.right,
+                              ),
+                              Text(formatDate(state
+                                  .currencyRate.rates[index].effectiveDate)),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],

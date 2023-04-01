@@ -39,9 +39,12 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        darkTheme: ThemeData.dark(useMaterial3: true),
-        themeMode: ThemeMode.dark,
+        darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
+          platform: TargetPlatform.iOS,
+        ),
+        themeMode: ThemeMode.system,
         theme: ThemeData(
+          platform: TargetPlatform.iOS,
           useMaterial3: true,
           primarySwatch: Colors.blue,
         ),

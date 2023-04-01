@@ -36,7 +36,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         AspectRatio(
           aspectRatio: 1.30,
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: LineChart(
               mainData(),
             ),
@@ -46,23 +46,48 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
   }
 
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    if (value % 1 != 0) {
+      return Container();
+    }
+    return SideTitleWidget(
+      space: 4,
+      axisSide: meta.axisSide,
+      fitInside: true
+          ? SideTitleFitInsideData.fromTitleMeta(meta, distanceFromEdge: 0)
+          : SideTitleFitInsideData.disable(),
+      child: Text(
+        value.toStringAsFixed(0),
+      ),
+    );
+  }
+
   LineChartData mainData() {
+    setState(() {
+      currentValue = widget.flSpots.last.y.toString();
+    });
+
     return LineChartData(
       gridData: FlGridData(
         show: false,
       ),
       titlesData: FlTitlesData(
-        show: true,
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
+          show: true,
+          rightTitles: AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                  showTitles: false,
+                  interval: 5,
+                  reservedSize: 25,
+                  getTitlesWidget: bottomTitleWidgets))),
       borderData: FlBorderData(
         show: false,
       ),
@@ -92,15 +117,39 @@ class _LineChartSample2State extends State<LineChartSample2> {
       ],
       lineTouchData: LineTouchData(
         handleBuiltInTouches: true,
+        getTouchedSpotIndicator:
+            (LineChartBarData barData, List<int> spotIndexes) {
+          return spotIndexes.map((spotIndex) {
+            final spot = barData.spots[spotIndex];
+
+            return TouchedSpotIndicatorData(
+              FlLine(color: Colors.green, strokeWidth: 3, dashArray: [4, 3]),
+              FlDotData(
+                getDotPainter: (spot, percent, barData, index) {
+                  return FlDotCirclePainter(
+                    radius: 3,
+                    color: Colors.white,
+                    strokeWidth: 2,
+                    strokeColor: Colors.black.withOpacity(0.7),
+                  );
+                },
+              ),
+            );
+          }).toList();
+        },
         touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
           fitInsideHorizontally: true,
           getTooltipItems: (touchedSpots) {
             return touchedSpots.map((LineBarSpot touchedSpot) {
-              return LineTooltipItem(
-                touchedSpot.y.toString(),
-                const TextStyle(color: Colors.white),
-              );
+              if (touchedSpot.y == findYMin(widget.flSpots)) {
+                return LineTooltipItem(
+                  touchedSpot.y.toString(),
+                  const TextStyle(color: Colors.white),
+                );
+              } else {
+                return null;
+              }
             }).toList();
           },
         ),
@@ -116,6 +165,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
               currentValue = value.toString();
             });
           } else {
+            setState(() {
+              currentValue = widget.flSpots.last.y.toString();
+            });
+          }
+          if (event is FlTapUpEvent || event is FlLongPressEnd) {
             setState(() {
               currentValue = widget.flSpots.last.y.toString();
             });

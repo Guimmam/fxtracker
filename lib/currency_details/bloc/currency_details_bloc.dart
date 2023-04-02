@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:fxtracker/repos/repositories.dart';
 
 import '../../models/currency_rate.dart';

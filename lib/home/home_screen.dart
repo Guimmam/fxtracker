@@ -8,15 +8,18 @@ import '../repos/repositories.dart';
 import 'bloc/home_bloc.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key});
+  const Home({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Kursy walut")),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeInitial) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (state is HomeLoadedState) {
             List<CurrencyModel> currencyList = state.currencyList;
@@ -30,7 +33,7 @@ class Home extends StatelessWidget {
                           .toUpperCase() +
                       currencyList[index].currency.substring(1);
                   return Padding(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     child: InkWell(
                       onTap: () {
                         Navigator.push(

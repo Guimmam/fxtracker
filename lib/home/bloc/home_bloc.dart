@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fxtracker/models/currency_model.dart';
 import 'package:fxtracker/repos/repositories.dart';
 
@@ -15,7 +16,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         final currencyList = await _currencyListRepository.getCurrencyList();
         emit(HomeLoadedState(currencyList));
       } catch (e) {
-        print("error");
+        if (kDebugMode) {
+          print("error");
+        }
         emit(HomeErrorState(e.toString()));
       }
     });

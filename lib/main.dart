@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:fxtracker/models/currency_model.dart';
 import 'package:fxtracker/repos/repositories.dart';
 
 import 'currency_details/bloc/currency_details_bloc.dart';
@@ -71,7 +70,7 @@ class _MyAppState extends State<MyApp> {
                               context)),
                 ),
               ],
-              child: Home(),
+              child: const Home(),
             )));
   }
 }

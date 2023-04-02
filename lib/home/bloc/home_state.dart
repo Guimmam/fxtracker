@@ -9,14 +9,14 @@ abstract class HomeState extends Equatable {
 class HomeInitial extends HomeState {}
 
 class HomeLoadedState extends HomeState {
-  HomeLoadedState(this.currencyList);
+  const HomeLoadedState(this.currencyList);
   final List<CurrencyModel> currencyList;
   @override
   List<Object> get props => [currencyList];
 }
 
 class HomeErrorState extends HomeState {
-  HomeErrorState(this.error);
+  const HomeErrorState(this.error);
   final String error;
   @override
   List<Object> get props => [error];

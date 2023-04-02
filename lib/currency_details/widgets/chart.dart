@@ -35,30 +35,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
         ),
         AspectRatio(
           aspectRatio: 1.30,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: LineChart(
-              mainData(),
-            ),
+          child: LineChart(
+            mainData(),
           ),
         ),
       ],
-    );
-  }
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    if (value % 1 != 0) {
-      return Container();
-    }
-    return SideTitleWidget(
-      space: 4,
-      axisSide: meta.axisSide,
-      fitInside: true
-          ? SideTitleFitInsideData.fromTitleMeta(meta, distanceFromEdge: 0)
-          : SideTitleFitInsideData.disable(),
-      child: Text(
-        value.toStringAsFixed(0),
-      ),
     );
   }
 
@@ -84,10 +65,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
           bottomTitles: AxisTitles(
               sideTitles: SideTitles(
-                  showTitles: false,
-                  interval: 5,
-                  reservedSize: 25,
-                  getTitlesWidget: bottomTitleWidgets))),
+            showTitles: false,
+          ))),
       borderData: FlBorderData(
         show: false,
       ),

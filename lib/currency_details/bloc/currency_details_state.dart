@@ -12,7 +12,7 @@ class CurrencyDetailsInitial extends CurrencyDetailsState {}
 class RateLoading extends CurrencyDetailsState {}
 
 class RateLoaded extends CurrencyDetailsState {
-  RateLoaded(this.currencyRate);
+  const RateLoaded(this.currencyRate);
   final CurrencyRate currencyRate;
   @override
   List<Object> get props => [currencyRate];

@@ -64,13 +64,16 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
             }
             if (state is RateLoaded) {
               List<FlSpot> flspots = [];
+              List<DateTime> days = [];
               for (int i = 1; i < state.currencyRate.rates.length + 1; i++) {
                 flspots.add(
                     FlSpot(i.toDouble(), state.currencyRate.rates[i - 1].mid));
+                days.add(state.currencyRate.rates[i - 1].effectiveDate);
               }
               return Column(
                 children: [
                   LineChartSample2(
+                    days: days,
                     flSpots: flspots,
                     code: widget.code,
                   ),

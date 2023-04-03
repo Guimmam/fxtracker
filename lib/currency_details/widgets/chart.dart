@@ -1,13 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class LineChartSample2 extends StatefulWidget {
   List<FlSpot> flSpots;
+  List<DateTime> days;
   String code;
   LineChartSample2({
     Key? key,
     required this.flSpots,
+    required this.days,
     required this.code,
   }) : super(key: key);
 
@@ -18,11 +22,21 @@ class LineChartSample2 extends StatefulWidget {
 class _LineChartSample2State extends State<LineChartSample2> {
   List<Color> gradientColors = [Color.fromRGBO(0, 188, 212, 1), Colors.green];
   late String currentValue;
+  late DateTime effectiveDate;
 
   @override
   void initState() {
     currentValue = widget.flSpots.last.y.toString();
+    effectiveDate = widget.days.last;
     super.initState();
+  }
+
+  String formatDate(DateTime date) {
+    DateFormat formatter = DateFormat(
+      'dd/MM/yyyy',
+    );
+    String formatted = formatter.format(date);
+    return formatted;
   }
 
   @override
@@ -33,21 +47,19 @@ class _LineChartSample2State extends State<LineChartSample2> {
           "1 ${widget.code} = $currentValue PLN",
           textAlign: TextAlign.center,
         ),
+        Text(formatDate(effectiveDate)),
         AspectRatio(
           aspectRatio: 1.30,
           child: LineChart(
             mainData(),
           ),
         ),
+        ActionChoiceExample()
       ],
     );
   }
 
   LineChartData mainData() {
-    setState(() {
-      currentValue = widget.flSpots.last.y.toString();
-    });
-
     return LineChartData(
       gridData: FlGridData(
         show: false,
@@ -136,21 +148,26 @@ class _LineChartSample2State extends State<LineChartSample2> {
           if (touchResponse == null) {
             setState(() {
               currentValue = widget.flSpots.last.y.toString();
+              effectiveDate = widget.days.last;
             });
           } else if (touchResponse.lineBarSpots != null &&
               touchResponse.lineBarSpots!.isNotEmpty) {
             final value = touchResponse.lineBarSpots!.first.y;
+            final day = touchResponse.lineBarSpots!.first.x;
             setState(() {
               currentValue = value.toString();
+              effectiveDate = widget.days[day.toInt()];
             });
           } else {
             setState(() {
               currentValue = widget.flSpots.last.y.toString();
+              effectiveDate = widget.days.last;
             });
           }
           if (event is FlTapUpEvent || event is FlLongPressEnd) {
             setState(() {
               currentValue = widget.flSpots.last.y.toString();
+              effectiveDate = widget.days.last;
             });
           }
         },
@@ -176,5 +193,47 @@ class _LineChartSample2State extends State<LineChartSample2> {
       }
     }
     return maxY * 1.009;
+  }
+}
+
+class ActionChoiceExample extends StatefulWidget {
+  const ActionChoiceExample({super.key});
+
+  @override
+  State<ActionChoiceExample> createState() => _ActionChoiceExampleState();
+}
+
+class _ActionChoiceExampleState extends State<ActionChoiceExample> {
+  int? _value = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Wrap(
+            spacing: 5.0,
+            children: List<Widget>.generate(
+              3,
+              (int index) {
+                return FilterChip(
+                  label: Text('Item $index'),
+                  selected: _value == index,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value = selected ? index : null;
+                    });
+                  },
+                );
+              },
+            ).toList(),
+          ),
+        ],
+      ),
+    );
   }
 }

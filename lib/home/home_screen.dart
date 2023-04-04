@@ -34,26 +34,27 @@ class Home extends StatelessWidget {
                       currencyList[index].currency.substring(1);
                   return Padding(
                     padding: const EdgeInsets.all(5),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                BlocProvider<CurrencyDetailsBloc>(
-                              create: (context) => CurrencyDetailsBloc(
-                                currencyDetails: RepositoryProvider.of<
-                                    CurrencyDetailsRepository>(context),
+                    child: Card(
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(10),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  BlocProvider<CurrencyDetailsBloc>(
+                                create: (context) => CurrencyDetailsBloc(
+                                  currencyDetails: RepositoryProvider.of<
+                                      CurrencyDetailsRepository>(context),
+                                ),
+                                child: CurrencyDetails(
+                                    code: currencyList[index].code,
+                                    currency: currency,
+                                    days: 255),
                               ),
-                              child: CurrencyDetails(
-                                  code: currencyList[index].code,
-                                  currency: currency,
-                                  days: 90),
                             ),
-                          ),
-                        );
-                      },
-                      child: Card(
+                          );
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(

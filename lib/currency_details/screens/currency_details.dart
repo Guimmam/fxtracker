@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../models/currency_rate.dart';
 import '../../repos/repositories.dart';
 import '../bloc/currency_details_bloc.dart';
 import '../widgets/chart.dart';
@@ -63,19 +64,13 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
               return const Center(child: CircularProgressIndicator());
             }
             if (state is RateLoaded) {
-              List<FlSpot> flspots = [];
-              List<DateTime> days = [];
-              for (int i = 1; i < state.currencyRate.rates.length + 1; i++) {
-                flspots.add(
-                    FlSpot(i.toDouble(), state.currencyRate.rates[i - 1].mid));
-                days.add(state.currencyRate.rates[i - 1].effectiveDate);
-              }
+              List<Rate> rates = state.currencyRate.rates;
+
               return Column(
                 children: [
                   LineChartSample2(
-                    days: days,
-                    flSpots: flspots,
                     code: widget.code,
+                    rates: rates,
                   ),
                   Expanded(
                     child: Padding(

@@ -66,34 +66,9 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
             if (state is RateLoaded) {
               List<Rate> rates = state.currencyRate.rates;
 
-              return Column(
-                children: [
-                  LineChartSample2(
-                    code: widget.code,
-                    rates: rates,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: ListView.builder(
-                        itemCount: state.currencyRate.rates.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "1 ${widget.code} = ${state.currencyRate.rates[index].mid} zł",
-                                textAlign: TextAlign.right,
-                              ),
-                              Text(formatDate(state
-                                  .currencyRate.rates[index].effectiveDate)),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+              return LineChartSample2(
+                code: widget.code,
+                rates: rates,
               );
             }
             if (state is RateError) {

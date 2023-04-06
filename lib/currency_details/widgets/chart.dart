@@ -73,6 +73,39 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
         ),
         buildRangeButtons(),
+        Expanded(
+          child: SingleChildScrollView(
+            child: DataTable(
+              columns: [
+                DataColumn(
+                  label: Text('Kurs'),
+                ),
+                DataColumn(
+                  label: Text('Data'),
+                ),
+              ],
+              rows: widget.rates
+                  .skip(firstDate) // Skip the rows before the start index
+                  .map((rate) {
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      Text(
+                        '1 ${widget.code} = ${rate.mid} zł',
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                    DataCell(
+                      Text(
+                        formatDate(rate.effectiveDate),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ),
       ],
     );
   }

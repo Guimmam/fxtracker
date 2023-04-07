@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:fxtracker/currency_details/widgets/rates_table.dart';
 import 'package:intl/intl.dart';
 
 import 'package:fxtracker/models/currency_rate.dart';
@@ -73,39 +74,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
         ),
         buildRangeButtons(),
-        Expanded(
-          child: SingleChildScrollView(
-            child: DataTable(
-              columns: [
-                DataColumn(
-                  label: Text('Kurs'),
-                ),
-                DataColumn(
-                  label: Text('Data'),
-                ),
-              ],
-              rows: widget.rates
-                  .skip(firstDate) // Skip the rows before the start index
-                  .map((rate) {
-                return DataRow(
-                  cells: [
-                    DataCell(
-                      Text(
-                        '1 ${widget.code} = ${rate.mid} zł',
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                    DataCell(
-                      Text(
-                        formatDate(rate.effectiveDate),
-                      ),
-                    ),
-                  ],
-                );
-              }).toList(),
-            ),
-          ),
-        ),
+        RatesTable(rates: widget.rates, code: widget.code, firstDate: firstDate)
       ],
     );
   }

@@ -38,17 +38,17 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        darkTheme: ThemeData.dark(
-          useMaterial3: true,
-        ).copyWith(
-          platform: TargetPlatform.iOS,
-        ),
-        themeMode: ThemeMode.system,
         theme: ThemeData(
           platform: TargetPlatform.iOS,
           //colorSchemeSeed: Colors.blue,
           useMaterial3: true,
         ),
+        darkTheme: ThemeData.dark(
+          useMaterial3: true,
+        ).copyWith(
+          platform: TargetPlatform.iOS,
+        ),
+        themeMode: ThemeMode.dark,
         home: MultiRepositoryProvider(
             providers: [
               RepositoryProvider(

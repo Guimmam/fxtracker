@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fxtracker/currency_details/widgets/rates_table.dart';
+import 'package:fxtracker/settings/cubit/settings_cubit.dart';
 import 'package:intl/intl.dart';
 
 import 'package:fxtracker/models/currency_rate.dart';
@@ -65,13 +67,18 @@ class _LineChartSample2State extends State<LineChartSample2> {
           textAlign: TextAlign.center,
         ),
         Text(formatDate(effectiveDate)),
-        AspectRatio(
-          aspectRatio: 1.30,
-          child: LineChart(
-            swapAnimationDuration: Duration(milliseconds: 300), // Optional
-            swapAnimationCurve: Curves.ease,
-            mainData(),
-          ),
+        BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (context, state) {
+            final bool isCurved = state.isChartCurved;
+            return AspectRatio(
+              aspectRatio: 1.30,
+              child: LineChart(
+                swapAnimationDuration: Duration(milliseconds: 300), // Optional
+                swapAnimationCurve: Curves.ease,
+                mainData(isCurved),
+              ),
+            );
+          },
         ),
         buildRangeButtons(),
         RatesTable(rates: widget.rates, code: widget.code, firstDate: firstDate)
@@ -140,7 +147,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         });
   }
 
-  LineChartData mainData() {
+  LineChartData mainData(bool isCurved) {
     return LineChartData(
       gridData: FlGridData(
         show: false,
@@ -158,7 +165,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       lineBarsData: [
         LineChartBarData(
           spots: flSpots,
-          isCurved: false,
+          isCurved: isCurved,
           gradient: LinearGradient(
             colors: gradientColors,
           ),

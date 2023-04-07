@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fxtracker/currency_details/bloc/currency_details_bloc.dart';
 import 'package:fxtracker/currency_details/screens/currency_details.dart';
+import 'package:fxtracker/settings/settings_screen.dart';
 
 import '../models/currency_model.dart';
 import '../repos/repositories.dart';
@@ -15,7 +16,19 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Kursy walut")),
+      appBar: AppBar(
+        title: const Text("Kursy walut"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                final route = MaterialPageRoute(
+                  builder: (context) => SettingsScreen(),
+                );
+                Navigator.push(context, route);
+              },
+              icon: Icon(Icons.settings))
+        ],
+      ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeInitial) {

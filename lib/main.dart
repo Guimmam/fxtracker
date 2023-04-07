@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:fxtracker/repos/repositories.dart';
+import 'package:fxtracker/settings/cubit/settings_cubit.dart';
 
 import 'currency_details/bloc/currency_details_bloc.dart';
 import 'home/bloc/home_bloc.dart';
@@ -35,44 +36,50 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          platform: TargetPlatform.iOS,
-          //colorSchemeSeed: Colors.blue,
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData.dark(
-          useMaterial3: true,
-        ).copyWith(
-          platform: TargetPlatform.iOS,
-        ),
-        themeMode: ThemeMode.dark,
-        home: MultiRepositoryProvider(
-            providers: [
-              RepositoryProvider(
-                create: (context) => CurrencyListRepository(),
-              ),
-              RepositoryProvider(
-                create: (context) => CurrencyDetailsRepository(),
-              ),
-            ],
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (context) => HomeBloc(
-                      RepositoryProvider.of<CurrencyListRepository>(context))
-                    ..add(LoadHomeEvent()),
+    return MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(
+            create: (context) => CurrencyListRepository(),
+          ),
+          RepositoryProvider(
+            create: (context) => CurrencyDetailsRepository(),
+          ),
+        ],
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => HomeBloc(
+                  RepositoryProvider.of<CurrencyListRepository>(context))
+                ..add(LoadHomeEvent()),
+            ),
+            BlocProvider(
+              create: (context) => CurrencyDetailsBloc(
+                  currencyDetails:
+                      RepositoryProvider.of<CurrencyDetailsRepository>(
+                          context)),
+            ),
+            BlocProvider(create: (context) => SettingsCubit())
+          ],
+          child: BlocBuilder<SettingsCubit, SettingsState>(
+            builder: (context, state) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Flutter Demo',
+                theme: ThemeData(
+                  platform: TargetPlatform.iOS,
+                  //colorSchemeSeed: Colors.blue,
+                  useMaterial3: true,
                 ),
-                BlocProvider(
-                  create: (context) => CurrencyDetailsBloc(
-                      currencyDetails:
-                          RepositoryProvider.of<CurrencyDetailsRepository>(
-                              context)),
+                darkTheme: ThemeData.dark(
+                  useMaterial3: true,
+                ).copyWith(
+                  platform: TargetPlatform.iOS,
                 ),
-              ],
-              child: const Home(),
-            )));
+                themeMode: state.themeMode,
+                home: Home(),
+              );
+            },
+          ),
+        ));
   }
 }

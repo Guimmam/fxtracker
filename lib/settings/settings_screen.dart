@@ -60,6 +60,15 @@ class SettingsScreen extends StatelessWidget {
                     context.read<SettingsCubit>().setSystemTheme();
                   },
                 ),
+              ),
+              Column(
+                children: [
+                  Text("Ikony stworzone przez Freepik z"),
+                  Image.asset(
+                    "lib/assets/img/flaticon.png",
+                    width: 200,
+                  ),
+                ],
               )
             ],
           );

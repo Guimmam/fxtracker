@@ -57,9 +57,11 @@ class _MyAppState extends State<MyApp> {
         ],
         child: MultiBlocProvider(
           providers: [
+            BlocProvider(create: (context) => SettingsCubit()),
             BlocProvider(
               create: (context) => HomeBloc(
-                  RepositoryProvider.of<CurrencyListRepository>(context))
+                  RepositoryProvider.of<CurrencyListRepository>(context),
+                  settingsCubit: SettingsCubit())
                 ..add(LoadHomeEvent()),
             ),
             BlocProvider(
@@ -68,7 +70,6 @@ class _MyAppState extends State<MyApp> {
                       RepositoryProvider.of<CurrencyDetailsRepository>(
                           context)),
             ),
-            BlocProvider(create: (context) => SettingsCubit())
           ],
           child: BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {

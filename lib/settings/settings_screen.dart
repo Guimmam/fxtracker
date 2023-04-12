@@ -25,7 +25,7 @@ class SettingsScreen extends StatelessWidget {
                     Switch(
                       value: state.isChartCurved,
                       onChanged: (bool value) {
-                        context.read<SettingsCubit>().toogleChartCurve();
+                        context.read<SettingsCubit>().toggleChartCurve();
                       },
                     ),
                   ],
@@ -37,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
                   value: ThemeMode.light,
                   groupValue: state.themeMode,
                   onChanged: (value) {
-                    context.read<SettingsCubit>().setLightTheme();
+                    context.read<SettingsCubit>().setTheme(ThemeMode.light);
                   },
                 ),
               ),
@@ -47,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
                   value: ThemeMode.dark,
                   groupValue: state.themeMode,
                   onChanged: (value) {
-                    context.read<SettingsCubit>().setDarkTheme();
+                    context.read<SettingsCubit>().setTheme(ThemeMode.dark);
                   },
                 ),
               ),
@@ -57,7 +57,7 @@ class SettingsScreen extends StatelessWidget {
                   value: ThemeMode.system,
                   groupValue: state.themeMode,
                   onChanged: (value) {
-                    context.read<SettingsCubit>().setSystemTheme();
+                    context.read<SettingsCubit>().setTheme(ThemeMode.system);
                   },
                 ),
               ),

@@ -11,6 +11,7 @@ class CurrencyListRepository {
 
     if (response.statusCode == 200) {
       final List result = jsonDecode(response.body)[0]["rates"];
+      result.removeLast();
 
       return result.map((e) => CurrencyModel.fromJson(e)).toList();
     } else {

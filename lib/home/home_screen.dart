@@ -8,6 +8,7 @@ import 'package:fxtracker/settings/settings_screen.dart';
 
 import '../models/currency_model.dart';
 import '../repos/repositories.dart';
+import '../settings/cubit/settings_cubit.dart';
 import 'bloc/home_bloc.dart';
 
 class Home extends StatelessWidget {
@@ -37,22 +38,51 @@ class Home extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is HomeLoadedState) {
-            List<CurrencyModel> currencyList = state.currencyList;
-
-            return ListView.builder(
-                itemCount: currencyList.length - 1,
-                itemBuilder: ((context, index) {
-                  String currency = currencyList[index]
-                          .currency
-                          .substring(0, 1)
-                          .toUpperCase() +
-                      currencyList[index].currency.substring(1);
-                  return CurrencyTile(
-                    currencyList: currencyList,
-                    currency: currency,
-                    index: index,
-                  );
-                }));
+            return BlocBuilder<SettingsCubit, SettingsState>(
+              builder: (context, settingsState) {
+                List<CurrencyModel> currencyList = state.currencyList;
+                List<CurrencyModel> favoritesList = state.favoritesCurrencyList;
+                return ListView.builder(
+                  itemCount: currencyList.length + favoritesList.length + 2,
+                  itemBuilder: ((context, index) {
+                    String currency;
+                    if (index == 0) {
+                      return Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text("Ulubione"),
+                      );
+                    } else if (index <= favoritesList.length) {
+                      return CurrencyTile(
+                        currencyList: favoritesList,
+                        currency: favoritesList[index - 1].code,
+                        index: index - 1,
+                      );
+                    } else if (index == favoritesList.length + 1) {
+                      return Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text("Pozostałe"),
+                      );
+                    } else {
+                      int newIndex = index - favoritesList.length - 2;
+                      if (newIndex < currencyList.length) {
+                        currency = currencyList[newIndex]
+                                .currency
+                                .substring(0, 1)
+                                .toUpperCase() +
+                            currencyList[newIndex].currency.substring(1);
+                        return CurrencyTile(
+                          currencyList: currencyList,
+                          currency: currencyList[newIndex].code,
+                          index: newIndex,
+                        );
+                      } else {
+                        return Container(); // Placeholder widget, może być dostosowany do potrzeb
+                      }
+                    }
+                  }),
+                );
+              },
+            );
           }
           return Container();
         },

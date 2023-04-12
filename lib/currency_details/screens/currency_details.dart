@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/currency_rate.dart';
 import '../../repos/repositories.dart';
+import '../../settings/cubit/settings_cubit.dart';
 import '../bloc/currency_details_bloc.dart';
 import '../widgets/chart.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +55,29 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.currency),
+          actions: [
+            BlocBuilder<SettingsCubit, SettingsState>(
+              builder: (context, state) {
+                return IconButton(
+                    onPressed: () {
+                      if (state.favoritesCurrencyList.contains(widget.code)) {
+                        context
+                            .read<SettingsCubit>()
+                            .removeFromFavorites(widget.code);
+                      } else {
+                        context
+                            .read<SettingsCubit>()
+                            .addToFavorites(widget.code);
+                      }
+                    },
+                    icon: state.favoritesCurrencyList.contains(widget.code)
+                        ? Icon(
+                            Icons.star_rounded,
+                          )
+                        : Icon(Icons.star_outline_rounded));
+              },
+            )
+          ],
         ),
         body: BlocBuilder<CurrencyDetailsBloc, CurrencyDetailsState>(
           builder: (context, state) {

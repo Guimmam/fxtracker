@@ -9,10 +9,11 @@ abstract class HomeState extends Equatable {
 class HomeInitial extends HomeState {}
 
 class HomeLoadedState extends HomeState {
-  const HomeLoadedState(this.currencyList);
+  const HomeLoadedState(this.currencyList, this.favoritesCurrencyList);
   final List<CurrencyModel> currencyList;
+  final List<CurrencyModel> favoritesCurrencyList;
   @override
-  List<Object> get props => [currencyList];
+  List<Object> get props => [currencyList, favoritesCurrencyList];
 }
 
 class HomeErrorState extends HomeState {

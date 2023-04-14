@@ -10,7 +10,7 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
       : super(SettingsState(
           themeMode: ThemeMode.system,
           isChartCurved: false,
-          favoritesCurrencyList: ["EUR", "USD", "THB", "HKD", "UAH"],
+          favoritesCurrencyList: ["EUR", "USD"],
         ));
 
   void setTheme(ThemeMode themeMode) {

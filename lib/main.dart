@@ -60,8 +60,9 @@ class _MyAppState extends State<MyApp> {
             BlocProvider(create: (context) => SettingsCubit()),
             BlocProvider(
               create: (context) => HomeBloc(
-                  RepositoryProvider.of<CurrencyListRepository>(context),
-                  settingsCubit: SettingsCubit())
+                  currencyListRepository:
+                      RepositoryProvider.of<CurrencyListRepository>(context),
+                  settingsCubit: context.read<SettingsCubit>())
                 ..add(LoadHomeEvent()),
             ),
             BlocProvider(

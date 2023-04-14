@@ -21,7 +21,7 @@ class CurrencyModel {
   String toRawJson() => json.encode(toJson());
 
   factory CurrencyModel.fromJson(Map<String, dynamic> json) => CurrencyModel(
-        currency: json["currency"],
+        currency: _capitalizeFirstLetter(json["currency"]),
         code: json["code"],
         mid: json["mid"]?.toDouble(),
       );
@@ -31,4 +31,9 @@ class CurrencyModel {
         "code": code,
         "mid": mid,
       };
+}
+
+String _capitalizeFirstLetter(String input) {
+  if (input == null || input.isEmpty) return input;
+  return input[0].toUpperCase() + input.substring(1).toLowerCase();
 }

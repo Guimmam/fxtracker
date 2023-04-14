@@ -38,50 +38,48 @@ class Home extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is HomeLoadedState) {
-            return BlocBuilder<SettingsCubit, SettingsState>(
-              builder: (context, settingsState) {
-                List<CurrencyModel> currencyList = state.currencyList;
-                List<CurrencyModel> favoritesList = state.favoritesCurrencyList;
-                return ListView.builder(
-                  itemCount: currencyList.length + favoritesList.length + 2,
-                  itemBuilder: ((context, index) {
-                    String currency;
-                    if (index == 0) {
-                      return Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text("Ulubione"),
-                      );
-                    } else if (index <= favoritesList.length) {
-                      return CurrencyTile(
-                        currencyList: favoritesList,
-                        currency: favoritesList[index - 1].code,
-                        index: index - 1,
-                      );
-                    } else if (index == favoritesList.length + 1) {
-                      return Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text("Pozostałe"),
-                      );
-                    } else {
-                      int newIndex = index - favoritesList.length - 2;
-                      if (newIndex < currencyList.length) {
-                        currency = currencyList[newIndex]
-                                .currency
-                                .substring(0, 1)
-                                .toUpperCase() +
-                            currencyList[newIndex].currency.substring(1);
-                        return CurrencyTile(
-                          currencyList: currencyList,
-                          currency: currencyList[newIndex].code,
-                          index: newIndex,
-                        );
-                      } else {
-                        return Container(); // Placeholder widget, może być dostosowany do potrzeb
-                      }
-                    }
-                  }),
-                );
-              },
+            List<CurrencyModel> currencyList = state.currencyList;
+
+            List<CurrencyModel> favoritesList = state.favoritesCurrencyList;
+            return ListView.builder(
+              itemCount: currencyList.length + favoritesList.length + 2,
+              itemBuilder: ((context, index) {
+                if (index == 0) {
+                  if (favoritesList.isNotEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Text(
+                        "Ulubione",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }
+                  return Container();
+                } else if (index <= favoritesList.length) {
+                  CurrencyModel currency = favoritesList[index - 1];
+                  return CurrencyTile(
+                    currency: currency,
+                  );
+                } else if (index == favoritesList.length + 1) {
+                  return Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      "Pozostałe",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  );
+                } else {
+                  int newIndex = index - favoritesList.length - 2;
+                  if (newIndex < currencyList.length) {
+                    CurrencyModel currency = currencyList[newIndex];
+                    return CurrencyTile(
+                      currency: currency,
+                    );
+                  } else {
+                    return Container();
+                  }
+                }
+              }),
             );
           }
           return Container();
@@ -94,14 +92,10 @@ class Home extends StatelessWidget {
 class CurrencyTile extends StatelessWidget {
   const CurrencyTile({
     Key? key,
-    required this.currencyList,
     required this.currency,
-    required this.index,
   }) : super(key: key);
 
-  final List<CurrencyModel> currencyList;
-  final String currency;
-  final int index;
+  final CurrencyModel currency;
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +109,8 @@ class CurrencyTile extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => CurrencyDetails(
-                    code: currencyList[index].code,
-                    currency: currency,
+                    code: currency.code,
+                    currency: currency.currency,
                     days: 255),
               ),
             );
@@ -134,7 +128,7 @@ class CurrencyTile extends StatelessWidget {
                         padding:
                             const EdgeInsets.only(top: 4, bottom: 4, right: 8),
                         child: Image.asset(
-                          "lib/assets/img/${currencyList[index].code}.png",
+                          "lib/assets/img/${currency.code}.png",
                           width: 50,
                         ),
                       ),
@@ -144,11 +138,11 @@ class CurrencyTile extends StatelessWidget {
                           SizedBox(
                             width: 160,
                             child: Text(
-                              currency,
+                              currency.currency,
                               overflow: TextOverflow.fade,
                             ),
                           ),
-                          Text(currencyList[index].code),
+                          Text(currency.code),
                         ],
                       ),
                     ],
@@ -157,7 +151,7 @@ class CurrencyTile extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      "${currencyList[index].mid} zł",
+                      "${currency.mid} zł",
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],

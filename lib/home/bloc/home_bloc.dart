@@ -13,44 +13,25 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final SettingsCubit settingsCubit;
   late StreamSubscription settingsStreamSubscription;
-  final CurrencyListRepository _currencyListRepository;
+  final CurrencyListRepository currencyListRepository;
   List<String> favoritesCurrency = [];
+  List<CurrencyModel> currencyList = [];
 
-  HomeBloc(
-    this._currencyListRepository, {
+  HomeBloc({
+    required this.currencyListRepository,
     required this.settingsCubit,
   }) : super(HomeInitial()) {
     settingsStreamSubscription = settingsCubit.stream.listen(
-      (settingsState) {
-        print(
-            "settingsStreamSubscription: $settingsState"); // Log do sprawdzenia, czy otrzymujesz wartości ze strumienia
+      (settingsState) async {
         favoritesCurrency = settingsState.favoritesCurrencyList;
-      },
-      onError: (error) {
-        print(
-            "settingsStreamSubscription error: $error"); // Log do sprawdzenia ewentualnych błędów w strumieniu
-      },
-      onDone: () {
-        print(
-            "settingsStreamSubscription done"); // Log do sprawdzenia, czy strumień został zamknięty
+        _loadData();
       },
     );
 
     on<HomeEvent>((event, emit) async {
       emit(HomeInitial());
       try {
-        final currencyList = await _currencyListRepository.getCurrencyList();
-        List<CurrencyModel> favoritesList = [];
-        favoritesCurrency = settingsCubit.state.favoritesCurrencyList;
-
-        currencyList.forEach((currency) {
-          if (favoritesCurrency.contains(currency.code)) {
-            favoritesList.add(currency);
-          }
-        });
-        currencyList.removeWhere(
-            (currency) => favoritesCurrency.contains(currency.code));
-        emit(HomeLoadedState(currencyList, favoritesList));
+        _loadData();
       } catch (e) {
         if (kDebugMode) {
           print("error ${e.toString()}");
@@ -58,5 +39,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(HomeErrorState(e.toString()));
       }
     });
+  }
+
+  Future<void> _loadData() async {
+    List<CurrencyModel> favoritesList = [];
+    if (currencyList.isEmpty) {
+      currencyList = await currencyListRepository.getCurrencyList();
+    }
+    favoritesCurrency = settingsCubit.state.favoritesCurrencyList;
+    List<CurrencyModel> otherCurrency = [...currencyList];
+    currencyList.forEach((currency) {
+      if (favoritesCurrency.contains(currency.code)) {
+        favoritesList.add(currency);
+      }
+    });
+    otherCurrency
+        .removeWhere((currency) => favoritesCurrency.contains(currency.code));
+    emit(HomeLoadedState(otherCurrency, favoritesList));
+  }
+
+  @override
+  Future<void> close() {
+    settingsStreamSubscription.cancel();
+    return super.close();
   }
 }

@@ -54,7 +54,12 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
       value: _currencyDetailsBloc,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.currency),
+          title: Text(
+            widget.currency,
+            overflow: TextOverflow.fade,
+            softWrap: true,
+            textAlign: TextAlign.center,
+          ),
           actions: [
             BlocBuilder<SettingsCubit, SettingsState>(
               builder: (context, state) {
@@ -70,11 +75,12 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
                             .addToFavorites(widget.code);
                       }
                     },
-                    icon: state.favoritesCurrencyList.contains(widget.code)
-                        ? Icon(
-                            Icons.star_rounded,
-                          )
-                        : Icon(Icons.star_outline_rounded));
+                    icon: Icon(
+                      state.favoritesCurrencyList.contains(widget.code)
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
+                      size: 30,
+                    ));
               },
             )
           ],

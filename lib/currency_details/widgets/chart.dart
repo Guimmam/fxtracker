@@ -22,13 +22,13 @@ class LineChartSample2 extends StatefulWidget {
 }
 
 class _LineChartSample2State extends State<LineChartSample2> {
-  List<Color> gradientColors = [Color.fromRGBO(0, 188, 212, 1), Colors.green];
   late String currentValue;
   late DateTime effectiveDate;
   List<FlSpot> flSpots = [];
 
   int value = 0;
   int firstDate = 0;
+  double percentChange = 0;
 
   @override
   void initState() {
@@ -47,6 +47,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         break;
       }
     }
+    percentChange = calculatePercentageChange(flSpots, firstDate);
     super.initState();
   }
 
@@ -62,11 +63,41 @@ class _LineChartSample2State extends State<LineChartSample2> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          "1 ${widget.code} = $currentValue PLN",
-          textAlign: TextAlign.center,
+        Stack(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Text(
+                    "1 ${widget.code} = $currentValue PLN",
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(formatDate(effectiveDate)),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 5,
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: percentChange <= 0
+                      ? Colors.red.withOpacity(0.95)
+                      : Colors.green.withOpacity(0.95),
+                ),
+                child: Text("${percentChange.toStringAsFixed(2)}%",
+                    style: TextStyle(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.white
+                            : Colors.black,
+                        fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
         ),
-        Text(formatDate(effectiveDate)),
         BlocBuilder<SettingsCubit, SettingsState>(
           builder: (context, state) {
             final bool isCurved = state.isChartCurved;
@@ -137,7 +168,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             for (int i = 1; i < widget.rates.length; i++) {
               if (widget.rates.elementAt(i).effectiveDate.isAfter(lastDate)) {
                 firstDate = i;
-                print(calculatePercentageChange(flSpots, firstDate));
+                percentChange = calculatePercentageChange(flSpots, firstDate);
 
                 break;
               }
@@ -148,6 +179,14 @@ class _LineChartSample2State extends State<LineChartSample2> {
   }
 
   LineChartData mainData(bool isCurved) {
+    List<Color> gradientColors1 = [
+      Colors.red.withOpacity(0.3),
+      Colors.red.withOpacity(0.0)
+    ];
+    List<Color> gradientColors2 = [
+      Colors.green.withOpacity(0.3),
+      Colors.green.withOpacity(0.0)
+    ];
     return LineChartData(
       gridData: FlGridData(
         show: false,
@@ -166,10 +205,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
         LineChartBarData(
           spots: flSpots,
           isCurved: isCurved,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
           barWidth: 3,
+          color: percentChange <= 0 ? Colors.red : Colors.green,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: false,
@@ -177,9 +214,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
           belowBarData: BarAreaData(
             show: true,
             gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
+              colors: percentChange <= 0 ? gradientColors1 : gradientColors2,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.8, 1],
             ),
           ),
         ),
@@ -197,14 +235,19 @@ class _LineChartSample2State extends State<LineChartSample2> {
           final spot = barData.spots[spotIndex];
 
           return TouchedSpotIndicatorData(
-            FlLine(color: Colors.black, strokeWidth: 3, dashArray: [4, 3]),
+            FlLine(
+                color: percentChange <= 0 ? Colors.red : Colors.green,
+                strokeWidth: 3,
+                dashArray: [4, 3]),
             FlDotData(
               getDotPainter: (spot, percent, barData, index) {
                 return FlDotCirclePainter(
-                  radius: 3,
-                  color: Colors.white,
+                  radius: 4,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.white
+                      : Colors.black,
                   strokeWidth: 3,
-                  strokeColor: Colors.black.withOpacity(0.7),
+                  strokeColor: percentChange <= 0 ? Colors.red : Colors.green,
                 );
               },
             ),
@@ -263,6 +306,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
     double firstY = flspots[start].y;
     double lastY = flspots.last.y;
     double percentChange = ((lastY - firstY) / firstY) * 100;
+    print(percentChange);
     return percentChange;
   }
 }

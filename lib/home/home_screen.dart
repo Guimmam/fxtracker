@@ -127,9 +127,16 @@ class CurrencyTile extends StatelessWidget {
                       Padding(
                         padding:
                             const EdgeInsets.only(top: 4, bottom: 4, right: 8),
-                        child: Image.asset(
-                          "lib/assets/img/${currency.code}.png",
-                          width: 50,
+                        child: CircleAvatar(
+                          backgroundColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.7)
+                                  : Colors.white.withOpacity(0.1),
+                          radius: 26,
+                          child: CircleAvatar(
+                              radius: 23,
+                              foregroundImage: AssetImage(
+                                  "lib/assets/img/${currency.code}.png")),
                         ),
                       ),
                       Column(

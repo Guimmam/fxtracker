@@ -1,13 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'package:fxtracker/internet/cubit/internet_cubit.dart';
 import 'package:fxtracker/repos/repositories.dart';
 import 'package:fxtracker/settings/cubit/settings_cubit.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'currency_details/bloc/currency_details_bloc.dart';
 import 'home/bloc/home_bloc.dart';
@@ -21,11 +25,17 @@ void main() async {
         : await getTemporaryDirectory(),
   );
 
-  runApp(const MyApp());
+  runApp(MyApp(
+    internetConnectionChecker: InternetConnectionChecker(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final InternetConnectionChecker internetConnectionChecker;
+  const MyApp({
+    Key? key,
+    required this.internetConnectionChecker,
+  }) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -59,11 +69,16 @@ class _MyAppState extends State<MyApp> {
           providers: [
             BlocProvider(create: (context) => SettingsCubit()),
             BlocProvider(
+                create: (context) => InternetCubit(
+                    internetConnectionChecker:
+                        widget.internetConnectionChecker)),
+            BlocProvider(
               create: (context) => HomeBloc(
-                  currencyListRepository:
-                      RepositoryProvider.of<CurrencyListRepository>(context),
-                  settingsCubit: context.read<SettingsCubit>())
-                ..add(LoadHomeEvent()),
+                currencyListRepository:
+                    RepositoryProvider.of<CurrencyListRepository>(context),
+                settingsCubit: context.read<SettingsCubit>(),
+                internetCubit: context.read<InternetCubit>(),
+              ),
             ),
             BlocProvider(
               create: (context) => CurrencyDetailsBloc(

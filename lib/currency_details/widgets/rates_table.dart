@@ -60,7 +60,9 @@ class RatesTable extends StatelessWidget {
                   children: const [Text("Kurs"), Text("Data")],
                 ),
               ),
-              const Divider()
+              const Divider(
+                height: 0,
+              )
             ],
           ),
           Expanded(

@@ -6,6 +6,7 @@ import 'package:fxtracker/currency_details/bloc/currency_details_bloc.dart';
 import 'package:fxtracker/currency_details/screens/currency_details.dart';
 import 'package:fxtracker/settings/settings_screen.dart';
 
+import '../internet/cubit/internet_cubit.dart';
 import '../models/currency_model.dart';
 import '../repos/repositories.dart';
 import '../settings/cubit/settings_cubit.dart';
@@ -18,72 +19,119 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Kursy walut"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                final route = MaterialPageRoute(
-                  builder: (context) => SettingsScreen(),
-                );
-                Navigator.push(context, route);
-              },
-              icon: Icon(Icons.settings))
-        ],
-      ),
-      body: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          if (state is HomeInitial) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is HomeLoadedState) {
-            List<CurrencyModel> currencyList = state.currencyList;
+    return BlocListener<InternetCubit, InternetState>(
+      listener: (context, state) {
+        if (state is InternetDisconnected) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.cloud_off,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black
+                      : Colors.white,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "Nie masz połączenia z internetem",
+                ),
+              ],
+            ),
+            dismissDirection: DismissDirection.none,
+            duration: Duration(days: 1),
+          ));
+        }
+        if (state is InternetConnected) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.cloud_done,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black
+                      : Colors.white,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "Masz połączenie z internetem",
+                ),
+              ],
+            ),
+            backgroundColor: Colors.green,
+            dismissDirection: DismissDirection.none,
+          ));
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Kursy walut"),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  final route = MaterialPageRoute(
+                    builder: (context) => SettingsScreen(),
+                  );
+                  Navigator.push(context, route);
+                },
+                icon: Icon(Icons.settings))
+          ],
+        ),
+        body: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            if (state is HomeInitial) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is HomeLoadedState) {
+              List<CurrencyModel> currencyList = state.currencyList;
 
-            List<CurrencyModel> favoritesList = state.favoritesCurrencyList;
-            return ListView.builder(
-              itemCount: currencyList.length + favoritesList.length + 2,
-              itemBuilder: ((context, index) {
-                if (index == 0) {
-                  if (favoritesList.isNotEmpty) {
-                    return Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Text(
-                        "Ulubione",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    );
-                  }
-                  return Container();
-                } else if (index <= favoritesList.length) {
-                  CurrencyModel currency = favoritesList[index - 1];
-                  return CurrencyTile(
-                    currency: currency,
-                  );
-                } else if (index == favoritesList.length + 1) {
-                  return Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Text(
-                      "Pozostałe",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  );
-                } else {
-                  int newIndex = index - favoritesList.length - 2;
-                  if (newIndex < currencyList.length) {
-                    CurrencyModel currency = currencyList[newIndex];
+              List<CurrencyModel> favoritesList = state.favoritesCurrencyList;
+              return ListView.builder(
+                itemCount: currencyList.length + favoritesList.length + 2,
+                itemBuilder: ((context, index) {
+                  if (index == 0) {
+                    if (favoritesList.isNotEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Text(
+                          "Ulubione",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      );
+                    }
+                    return Container();
+                  } else if (index <= favoritesList.length) {
+                    CurrencyModel currency = favoritesList[index - 1];
                     return CurrencyTile(
                       currency: currency,
                     );
+                  } else if (index == favoritesList.length + 1) {
+                    return Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(
+                        "Pozostałe",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
                   } else {
-                    return Container();
+                    int newIndex = index - favoritesList.length - 2;
+                    if (newIndex < currencyList.length) {
+                      CurrencyModel currency = currencyList[newIndex];
+                      return CurrencyTile(
+                        currency: currency,
+                      );
+                    } else {
+                      return Container();
+                    }
                   }
-                }
-              }),
-            );
-          }
-          return Container();
-        },
+                }),
+              );
+            }
+            return Container();
+          },
+        ),
       ),
     );
   }

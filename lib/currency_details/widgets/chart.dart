@@ -83,17 +83,33 @@ class _LineChartSample2State extends State<LineChartSample2> {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(30),
                   color: percentChange <= 0
                       ? Colors.red.withOpacity(0.95)
                       : Colors.green.withOpacity(0.95),
                 ),
-                child: Text("${percentChange.toStringAsFixed(2)}%",
-                    style: TextStyle(
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Colors.white
-                            : Colors.black,
-                        fontWeight: FontWeight.bold)),
+                child: Row(
+                  children: [
+                    Icon(
+                      percentChange <= 0
+                          ? Icons.trending_down_rounded
+                          : Icons.trending_up_rounded,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("${percentChange.abs().toStringAsFixed(1)}%",
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.white
+                                    : Colors.black,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
               ),
             ),
           ],

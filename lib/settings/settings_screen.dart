@@ -15,6 +15,7 @@ class SettingsScreen extends StatelessWidget {
       body: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -29,6 +30,14 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                   ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  "Motyw aplikacji",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
               ListTile(
@@ -61,15 +70,15 @@ class SettingsScreen extends StatelessWidget {
                   },
                 ),
               ),
-              Column(
-                children: [
-                  Text("Ikony stworzone przez Freepik z"),
-                  Image.asset(
-                    "lib/assets/img/flaticon.png",
-                    width: 200,
-                  ),
-                ],
-              )
+              // Column(
+              //   children: [
+              //     Text("Ikony stworzone przez Freepik z"),
+              //     Image.asset(
+              //       "lib/assets/img/flaticon.png",
+              //       width: 200,
+              //     ),
+              //   ],
+              // )
             ],
           );
         },

@@ -43,9 +43,12 @@ dependencies:
   path_provider: ^2.0.14
   hydrated_bloc: ^9.1.0
   internet_connection_checker: ^1.0.0+1
+  flutter_native_splash: ^2.2.19
+
 
 
 dev_dependencies:
+
   flutter_test:
     sdk: flutter
 
@@ -60,6 +63,20 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: lib/assets/app-icons/fx_tracker_icon_white.png
+  color_dark: "#151110"
+  image_dark: lib/assets/app-icons/fx_tracker_icon_black.png
+
+  android_12:
+    image: lib/assets/app-icons/fx_tracker_icon_white.png
+    icon_background_color: "#ffffff"
+    image_dark: lib/assets/app-icons/fx_tracker_icon_black.png
+    icon_background_color_dark: "#151110"
+
+  web: false
 flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

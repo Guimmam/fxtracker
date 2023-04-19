@@ -2,7 +2,7 @@
     package="com.example.fxtracker">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="fxtracker"
+        android:label="FxTracker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

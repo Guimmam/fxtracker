@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,7 +26,9 @@ void main() async {
         ? HydratedStorage.webStorageDirectory
         : await getTemporaryDirectory(),
   );
-
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  FlutterNativeSplash.remove();
   runApp(MyApp(
     internetConnectionChecker: InternetConnectionChecker(),
   ));
@@ -104,7 +108,7 @@ class _MyAppState extends State<MyApp> {
                   platform: TargetPlatform.iOS,
                 ),
                 themeMode: state.themeMode,
-                home: Home(),
+                home: const Home(),
               );
             },
           ),

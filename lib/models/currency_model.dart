@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final currencyModel = currencyModelFromJson(jsonString);
-
 import 'dart:convert';
 
 class CurrencyModel {
@@ -34,6 +30,6 @@ class CurrencyModel {
 }
 
 String _capitalizeFirstLetter(String input) {
-  if (input == null || input.isEmpty) return input;
+  if (input.isEmpty) return input;
   return input[0].toUpperCase() + input.substring(1).toLowerCase();
 }

@@ -53,6 +53,20 @@ class Home extends StatelessWidget {
             if (state is HomeInitial) {
               return const Center(child: CircularProgressIndicator());
             }
+            if (state is HomeNoInternet) {
+              return const Center(
+                child: Text("Nie masz połączenia z internetem"),
+              );
+            }
+            if (state is HomeErrorState) {
+              return Center(
+                  child: Column(
+                children: [
+                  const Text("Coś poszło nie tak"),
+                  Text(state.error),
+                ],
+              ));
+            }
             if (state is HomeLoadedState) {
               List<CurrencyModel> currencyList = state.currencyList;
 

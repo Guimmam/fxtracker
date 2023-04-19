@@ -20,7 +20,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final CurrencyListRepository currencyListRepository;
   List<String> favoritesCurrency = [];
   List<CurrencyModel> currencyList = [];
-  bool isThereInternet = false;
 
   HomeBloc({
     required this.internetCubit,
@@ -32,16 +31,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<HomeEvent>((event, emit) async {
       emit(HomeInitial());
-      try {
-        if (isThereInternet) {
-          _loadData();
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print("error ${e.toString()}");
-        }
-        emit(HomeErrorState(e.toString()));
-      }
     });
   }
 
@@ -49,6 +38,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     return settingsStreamSubscription = settingsCubit.stream.listen(
       (settingsState) async {
         favoritesCurrency = settingsState.favoritesCurrencyList;
+
         _loadData();
       },
     );
@@ -56,31 +46,38 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   StreamSubscription<InternetState> monitorInternetCubit() {
     return internetStreamSubscription =
-        internetCubit.stream.listen((internetState) {
+        internetCubit.stream.listen((internetState) async {
       if (internetState is InternetConnected) {
+        try {
+          currencyList = await currencyListRepository.getCurrencyList();
+        } catch (e) {
+          if (kDebugMode) {
+            print("error ${e.toString()}");
+          }
+          emit(HomeErrorState(e.toString()));
+        }
         _loadData();
-        isThereInternet = true;
-      } else {
-        isThereInternet = false;
       }
     });
   }
 
-  Future<void> _loadData() async {
-    List<CurrencyModel> favoritesList = [];
-    if (currencyList.isEmpty) {
-      currencyList = await currencyListRepository.getCurrencyList();
-    }
-    favoritesCurrency = settingsCubit.state.favoritesCurrencyList;
-    List<CurrencyModel> otherCurrency = [...currencyList];
-    for (var currency in currencyList) {
-      if (favoritesCurrency.contains(currency.code)) {
-        favoritesList.add(currency);
+  void _loadData() {
+    if (currencyList.isNotEmpty) {
+      List<CurrencyModel> favoritesList = [];
+      favoritesCurrency = settingsCubit.state.favoritesCurrencyList;
+      List<CurrencyModel> otherCurrency = [...currencyList];
+      for (int i = 0; i < favoritesCurrency.length; i++) {
+        for (int j = 0; j < currencyList.length; j++) {
+          if (currencyList[j].code == favoritesCurrency[i]) {
+            favoritesList.add(currencyList[j]);
+            break;
+          }
+        }
       }
+      otherCurrency
+          .removeWhere((currency) => favoritesCurrency.contains(currency.code));
+      emit(HomeLoadedState(otherCurrency, favoritesList));
     }
-    otherCurrency
-        .removeWhere((currency) => favoritesCurrency.contains(currency.code));
-    emit(HomeLoadedState(otherCurrency, favoritesList));
   }
 
   @override

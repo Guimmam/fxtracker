@@ -21,9 +21,9 @@ class CurrencyListRepository {
 }
 
 class CurrencyDetailsRepository {
-  Future<CurrencyRate> getCurrencyRates(String code, int days) async {
+  Future<CurrencyRate> getCurrencyRates(String code) async {
     String endpoint =
-        "http://api.nbp.pl/api/exchangerates/rates/A/$code/last/$days/";
+        "http://api.nbp.pl/api/exchangerates/rates/A/$code/last/255/";
     Response response = await get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {

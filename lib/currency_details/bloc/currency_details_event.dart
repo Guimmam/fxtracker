@@ -9,7 +9,6 @@ abstract class CurrencyDetailsEvent extends Equatable {
 
 class LoadRate extends CurrencyDetailsEvent {
   final String code;
-  final int days;
 
-  const LoadRate(this.code, this.days);
+  const LoadRate(this.code);
 }

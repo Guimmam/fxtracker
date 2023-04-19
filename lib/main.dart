@@ -82,6 +82,7 @@ class _MyAppState extends State<MyApp> {
             ),
             BlocProvider(
               create: (context) => CurrencyDetailsBloc(
+                  internetCubit: context.read<InternetCubit>(),
                   currencyDetails:
                       RepositoryProvider.of<CurrencyDetailsRepository>(
                           context)),

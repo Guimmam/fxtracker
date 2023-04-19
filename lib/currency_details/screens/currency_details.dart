@@ -25,21 +25,10 @@ class CurrencyDetails extends StatefulWidget {
 }
 
 class _CurrencyDetailsState extends State<CurrencyDetails> {
-  late CurrencyDetailsBloc _currencyDetailsBloc;
-
   @override
   void initState() {
     super.initState();
-    _currencyDetailsBloc = CurrencyDetailsBloc(
-      currencyDetails: CurrencyDetailsRepository(),
-    );
-    _currencyDetailsBloc.add(LoadRate(widget.code, widget.days));
-  }
-
-  @override
-  void dispose() {
-    _currencyDetailsBloc.close();
-    super.dispose();
+    context.read<CurrencyDetailsBloc>().setCode(widget.code);
   }
 
   String formatDate(DateTime date) {
@@ -50,63 +39,60 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CurrencyDetailsBloc>.value(
-      value: _currencyDetailsBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.currency,
-            overflow: TextOverflow.fade,
-            softWrap: true,
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            BlocBuilder<SettingsCubit, SettingsState>(
-              builder: (context, state) {
-                return IconButton(
-                    onPressed: () {
-                      if (state.favoritesCurrencyList.contains(widget.code)) {
-                        context
-                            .read<SettingsCubit>()
-                            .removeFromFavorites(widget.code);
-                      } else {
-                        context
-                            .read<SettingsCubit>()
-                            .addToFavorites(widget.code);
-                      }
-                    },
-                    icon: Icon(
-                      state.favoritesCurrencyList.contains(widget.code)
-                          ? Icons.star_rounded
-                          : Icons.star_outline_rounded,
-                      size: 30,
-                    ));
-              },
-            )
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          widget.currency,
+          overflow: TextOverflow.fade,
+          softWrap: true,
+          textAlign: TextAlign.center,
         ),
-        body: BlocBuilder<CurrencyDetailsBloc, CurrencyDetailsState>(
-          builder: (context, state) {
-            if (state is CurrencyDetailsInitial) {
-              return const Center(child: Text("first state"));
-            }
-            if (state is RateLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is RateLoaded) {
-              List<Rate> rates = state.currencyRate.rates;
+        actions: [
+          BlocBuilder<SettingsCubit, SettingsState>(
+            builder: (context, state) {
+              return IconButton(
+                  onPressed: () {
+                    if (state.favoritesCurrencyList.contains(widget.code)) {
+                      context
+                          .read<SettingsCubit>()
+                          .removeFromFavorites(widget.code);
+                    } else {
+                      context.read<SettingsCubit>().addToFavorites(widget.code);
+                    }
+                  },
+                  icon: Icon(
+                    state.favoritesCurrencyList.contains(widget.code)
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded,
+                    size: 30,
+                  ));
+            },
+          )
+        ],
+      ),
+      body: BlocBuilder<CurrencyDetailsBloc, CurrencyDetailsState>(
+        builder: (context, state) {
+          if (state is RateInitial) {
+            return const Center(child: Text("first state"));
+          }
+          if (state is RateLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is RateLoaded) {
+            List<Rate> rates = state.currencyRate.rates;
 
-              return LineChartSample2(
-                code: widget.code,
-                rates: rates,
-              );
-            }
-            if (state is RateError) {
-              return const Center(child: Text("Coś poszło nie tak "));
-            }
-            return Container();
-          },
-        ),
+            return LineChartSample2(
+              code: widget.code,
+              rates: rates,
+            );
+          }
+          if (state is RateError) {
+            return const Center(
+              child: Text("Coś poszło nie tak "),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }

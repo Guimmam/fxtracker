@@ -22,47 +22,16 @@ class Home extends StatelessWidget {
     return BlocListener<InternetCubit, InternetState>(
       listener: (context, state) {
         if (state is InternetDisconnected) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.cloud_off,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.black
-                      : Colors.white,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "Nie masz połączenia z internetem",
-                ),
-              ],
-            ),
-            dismissDirection: DismissDirection.none,
-            duration: Duration(days: 1),
-          ));
+          showSnackBar(context, "Nie masz połączenia z internetem", Colors.red,
+              const Duration(days: 5), Icons.cloud_off);
         }
         if (state is InternetConnected) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.cloud_done,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.black
-                      : Colors.white,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "Masz połączenie z internetem",
-                ),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            dismissDirection: DismissDirection.none,
-          ));
+          if (state.previousState is InternetDisconnected) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+            showSnackBar(context, "Znów masz połączenie z internetem",
+                Colors.green, const Duration(seconds: 5), Icons.cloud);
+          }
         }
       },
       child: Scaffold(
@@ -134,6 +103,34 @@ class Home extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showSnackBar(BuildContext context, String title, Color backgroundColor,
+      Duration duration, IconData icon) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BlocBuilder<SettingsCubit, SettingsState>(
+            builder: (context, state) {
+              return Icon(
+                icon,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : Colors.black,
+              );
+            },
+          ),
+          const SizedBox(width: 10),
+          Text(
+            title,
+          ),
+        ],
+      ),
+      backgroundColor: backgroundColor,
+      dismissDirection: DismissDirection.none,
+      duration: duration,
+    ));
   }
 }
 

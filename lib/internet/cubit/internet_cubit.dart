@@ -9,6 +9,7 @@ part 'internet_state.dart';
 class InternetCubit extends Cubit<InternetState> {
   final InternetConnectionChecker internetConnectionChecker;
   late StreamSubscription internetCheckerStream;
+  InternetState previousState = InternetLoading();
 
   InternetCubit({required this.internetConnectionChecker})
       : super(InternetLoading()) {
@@ -20,11 +21,13 @@ class InternetCubit extends Cubit<InternetState> {
         internetConnectionChecker.onStatusChange.listen((status) {
       switch (status) {
         case InternetConnectionStatus.connected:
-          emit(InternetConnected());
+          previousState = state;
+          emit(InternetConnected(previousState));
           print('Data connection is available.');
           break;
         case InternetConnectionStatus.disconnected:
-          emit(InternetDisconnected());
+          previousState = state;
+          emit(InternetDisconnected(previousState));
           print('You are disconnected from the internet.');
           break;
       }

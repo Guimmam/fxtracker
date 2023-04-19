@@ -9,6 +9,14 @@ abstract class InternetState extends Equatable {
 
 class InternetLoading extends InternetState {}
 
-class InternetConnected extends InternetState {}
+class InternetConnected extends InternetState {
+  final InternetState previousState;
 
-class InternetDisconnected extends InternetState {}
+  const InternetConnected(this.previousState);
+}
+
+class InternetDisconnected extends InternetState {
+  final InternetState previousState;
+
+  const InternetDisconnected(this.previousState);
+}

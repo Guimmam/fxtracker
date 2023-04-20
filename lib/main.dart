@@ -96,15 +96,17 @@ class _MyAppState extends State<MyApp> {
             builder: (context, state) {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
-                title: 'Flutter Demo',
+                title: 'FxTracker',
                 theme: ThemeData(
                   platform: TargetPlatform.iOS,
+                  appBarTheme: const AppBarTheme(scrolledUnderElevation: 0),
                   //colorSchemeSeed: Colors.blue,
                   useMaterial3: true,
                 ),
                 darkTheme: ThemeData.dark(
                   useMaterial3: true,
                 ).copyWith(
+                  appBarTheme: const AppBarTheme(scrolledUnderElevation: 0),
                   platform: TargetPlatform.iOS,
                 ),
                 themeMode: state.themeMode,

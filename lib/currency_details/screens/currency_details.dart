@@ -1,9 +1,7 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/currency_rate.dart';
-import '../../repos/repositories.dart';
 import '../../settings/cubit/settings_cubit.dart';
 import '../bloc/currency_details_bloc.dart';
 import '../widgets/chart.dart';

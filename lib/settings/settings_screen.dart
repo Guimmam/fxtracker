@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'cubit/settings_cubit.dart';
@@ -11,7 +9,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Ustawienia")),
+      appBar: AppBar(title: const Text("Ustawienia")),
       body: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           return Column(
@@ -22,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Zaookrąglij wykres "),
+                    const Text("Zaookrąglij wykres "),
                     Switch(
                       value: state.isChartCurved,
                       onChanged: (bool value) {
@@ -32,8 +30,8 @@ class SettingsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   "Motyw aplikacji",
                   textAlign: TextAlign.start,
@@ -41,7 +39,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                title: Text("Jasny"),
+                title: const Text("Jasny"),
                 leading: Radio(
                   value: ThemeMode.light,
                   groupValue: state.themeMode,
@@ -51,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                title: Text("Ciemny"),
+                title: const Text("Ciemny"),
                 leading: Radio(
                   value: ThemeMode.dark,
                   groupValue: state.themeMode,
@@ -61,7 +59,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                title: Text("System"),
+                title: const Text("System"),
                 leading: Radio(
                   value: ThemeMode.system,
                   groupValue: state.themeMode,

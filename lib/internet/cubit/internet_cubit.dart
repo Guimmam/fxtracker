@@ -23,12 +23,10 @@ class InternetCubit extends Cubit<InternetState> {
         case InternetConnectionStatus.connected:
           previousState = state;
           emit(InternetConnected(previousState));
-          print('Data connection is available.');
           break;
         case InternetConnectionStatus.disconnected:
           previousState = state;
           emit(InternetDisconnected(previousState));
-          print('You are disconnected from the internet.');
           break;
       }
     });

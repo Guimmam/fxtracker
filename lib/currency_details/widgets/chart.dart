@@ -9,9 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:fxtracker/models/currency_rate.dart';
 
 class LineChartSample2 extends StatefulWidget {
-  List<Rate> rates;
-  String code;
-  LineChartSample2({
+  final List<Rate> rates;
+  final String code;
+  const LineChartSample2({
     Key? key,
     required this.rates,
     required this.code,
@@ -35,7 +35,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
     currentValue = widget.rates.last.mid.toString();
     effectiveDate = widget.rates.last.effectiveDate;
 
-    DateTime lastDate = effectiveDate.subtract(Duration(days: 30));
+    DateTime lastDate = effectiveDate.subtract(const Duration(days: 30));
 
     for (int i = 1; i < widget.rates.length; i++) {
       flSpots.add(FlSpot(i.toDouble(), widget.rates.elementAt(i).mid));
@@ -98,7 +98,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
                           ? Colors.white
                           : Colors.black,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Text("${percentChange.abs().toStringAsFixed(1)}%",
@@ -120,7 +120,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
             return AspectRatio(
               aspectRatio: 1.30,
               child: LineChart(
-                swapAnimationDuration: Duration(milliseconds: 300), // Optional
+                swapAnimationDuration:
+                    const Duration(milliseconds: 300), // Optional
                 swapAnimationCurve: Curves.ease,
                 mainData(isCurved),
               ),
@@ -144,7 +145,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           itemCount: range.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 3),
               child: buildRangeChip(range, index),
             );
           },
@@ -233,7 +234,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
               colors: percentChange <= 0 ? gradientColors1 : gradientColors2,
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              stops: [0.8, 1],
+              stops: const [0.8, 1],
             ),
           ),
         ),
@@ -248,8 +249,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
       getTouchedSpotIndicator:
           (LineChartBarData barData, List<int> spotIndexes) {
         return spotIndexes.map((spotIndex) {
-          final spot = barData.spots[spotIndex];
-
           return TouchedSpotIndicatorData(
             FlLine(
                 color: percentChange <= 0 ? Colors.red : Colors.green,
@@ -322,7 +321,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
     double firstY = flspots[start].y;
     double lastY = flspots.last.y;
     double percentChange = ((lastY - firstY) / firstY) * 100;
-    print(percentChange);
+
     return percentChange;
   }
 }

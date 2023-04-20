@@ -2,13 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fxtracker/currency_details/bloc/currency_details_bloc.dart';
 import 'package:fxtracker/currency_details/screens/currency_details.dart';
 import 'package:fxtracker/settings/settings_screen.dart';
 
 import '../internet/cubit/internet_cubit.dart';
 import '../models/currency_model.dart';
-import '../repos/repositories.dart';
 import '../settings/cubit/settings_cubit.dart';
 import 'bloc/home_bloc.dart';
 
@@ -41,11 +39,11 @@ class Home extends StatelessWidget {
             IconButton(
                 onPressed: () {
                   final route = MaterialPageRoute(
-                    builder: (context) => SettingsScreen(),
+                    builder: (context) => const SettingsScreen(),
                   );
                   Navigator.push(context, route);
                 },
-                icon: Icon(Icons.settings))
+                icon: const Icon(Icons.settings))
           ],
         ),
         body: BlocBuilder<HomeBloc, HomeState>(
@@ -71,45 +69,68 @@ class Home extends StatelessWidget {
               List<CurrencyModel> currencyList = state.currencyList;
 
               List<CurrencyModel> favoritesList = state.favoritesCurrencyList;
-              return ListView.builder(
-                itemCount: currencyList.length + favoritesList.length + 2,
-                itemBuilder: ((context, index) {
-                  if (index == 0) {
-                    if (favoritesList.isNotEmpty) {
-                      return Padding(
-                        padding: EdgeInsets.all(12),
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (favoritesList.isNotEmpty)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 12, left: 12),
                         child: Text(
                           "Ulubione",
                           style: TextStyle(fontSize: 20),
                         ),
-                      );
-                    }
-                    return Container();
-                  } else if (index <= favoritesList.length) {
-                    CurrencyModel currency = favoritesList[index - 1];
-                    return CurrencyTile(
-                      currency: currency,
-                    );
-                  } else if (index == favoritesList.length + 1) {
-                    return Padding(
-                      padding: const EdgeInsets.all(12),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: favoritesList.length,
+                            itemBuilder: ((context, index) {
+                              CurrencyModel currency = favoritesList[index];
+                              return CurrencyTile(
+                                currency: currency,
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 12, left: 12),
                       child: Text(
                         "Pozostałe",
                         style: TextStyle(fontSize: 20),
                       ),
-                    );
-                  } else {
-                    int newIndex = index - favoritesList.length - 2;
-                    if (newIndex < currencyList.length) {
-                      CurrencyModel currency = currencyList[newIndex];
-                      return CurrencyTile(
-                        currency: currency,
-                      );
-                    } else {
-                      return Container();
-                    }
-                  }
-                }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: currencyList.length,
+                            itemBuilder: ((context, index) {
+                              CurrencyModel currency = currencyList[index];
+                              return CurrencyTile(
+                                currency: currency,
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 50)
+                  ],
+                ),
               );
             }
             return Container();
@@ -159,71 +180,67 @@ class CurrencyTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(5),
-      child: Card(
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CurrencyDetails(
-                    code: currency.code,
-                    currency: currency.currency,
-                    days: 255),
-              ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  flex: 3,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 4, bottom: 4, right: 8),
-                        child: CircleAvatar(
-                          backgroundColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.black.withOpacity(0.7)
-                                  : Colors.white.withOpacity(0.1),
-                          radius: 26,
-                          child: CircleAvatar(
-                              radius: 23,
-                              foregroundImage: AssetImage(
-                                  "lib/assets/img/${currency.code}.png")),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 160,
-                            child: Text(
-                              currency.currency,
-                              overflow: TextOverflow.fade,
-                            ),
-                          ),
-                          Text(currency.code),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
+      padding: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CurrencyDetails(
+                  code: currency.code, currency: currency.currency, days: 255),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                flex: 3,
+                child: Row(
                   children: [
-                    Text(
-                      "${currency.mid} zł",
-                      overflow: TextOverflow.ellipsis,
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 4, bottom: 4, right: 8),
+                      child: CircleAvatar(
+                        backgroundColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? Colors.black.withOpacity(0.7)
+                                : Colors.white.withOpacity(0.1),
+                        radius: 26,
+                        child: CircleAvatar(
+                            radius: 23,
+                            foregroundImage: AssetImage(
+                                "lib/assets/img/${currency.code}.png")),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 160,
+                          child: Text(
+                            currency.currency,
+                            overflow: TextOverflow.fade,
+                          ),
+                        ),
+                        Text(currency.code),
+                      ],
                     ),
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+              Column(
+                children: [
+                  Text(
+                    "${currency.mid} zł",
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              )
+            ],
           ),
         ),
       ),

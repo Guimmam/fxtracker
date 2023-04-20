@@ -5,10 +5,10 @@ import 'package:intl/intl.dart';
 import '../../models/currency_rate.dart';
 
 class RatesTable extends StatelessWidget {
-  List<Rate> rates;
-  String code;
-  int firstDate;
-  RatesTable({
+  final List<Rate> rates;
+  final String code;
+  final int firstDate;
+  const RatesTable({
     Key? key,
     required this.rates,
     required this.code,

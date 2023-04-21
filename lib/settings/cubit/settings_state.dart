@@ -5,11 +5,13 @@ part of 'settings_cubit.dart';
 class SettingsState {
   final ThemeMode themeMode;
   final bool isChartCurved;
+  final bool chartHapticFeedback;
   final List<String> favoritesCurrencyList;
   SettingsState({
     required this.themeMode,
     required this.isChartCurved,
     required this.favoritesCurrencyList,
+    required this.chartHapticFeedback,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +19,7 @@ class SettingsState {
       'themeMode': themeMode.toString(),
       'isChartCurved': isChartCurved,
       'favoritesCurrencyList': favoritesCurrencyList,
+      'chartHapticFeedback': chartHapticFeedback
     };
   }
 
@@ -24,6 +27,7 @@ class SettingsState {
     return SettingsState(
         themeMode: _parseThemeMode(map['themeMode'] as String),
         isChartCurved: map['isChartCurved'] as bool,
+        chartHapticFeedback: map['chartHapticFeedback'] as bool,
         favoritesCurrencyList: List<String>.from(
           (map['favoritesCurrencyList'] as List<String>),
         ));
@@ -45,11 +49,13 @@ class SettingsState {
   SettingsState copyWith({
     ThemeMode? themeMode,
     bool? isChartCurved,
+    bool? chartHapticFeedback,
     List<String>? favoritesCurrencyList,
   }) {
     return SettingsState(
       themeMode: themeMode ?? this.themeMode,
       isChartCurved: isChartCurved ?? this.isChartCurved,
+      chartHapticFeedback: chartHapticFeedback ?? this.chartHapticFeedback,
       favoritesCurrencyList:
           favoritesCurrencyList ?? this.favoritesCurrencyList,
     );

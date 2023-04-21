@@ -8,6 +8,7 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
       : super(SettingsState(
           themeMode: ThemeMode.system,
           isChartCurved: false,
+          chartHapticFeedback: true,
           favoritesCurrencyList: ["EUR", "USD"],
         ));
 
@@ -22,6 +23,16 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
       emit(updatedState);
     } else {
       final updatedState = state.copyWith(isChartCurved: true);
+      emit(updatedState);
+    }
+  }
+
+  void toggleChartHapticFeedback() {
+    if (state.chartHapticFeedback) {
+      final updatedState = state.copyWith(chartHapticFeedback: false);
+      emit(updatedState);
+    } else {
+      final updatedState = state.copyWith(chartHapticFeedback: true);
       emit(updatedState);
     }
   }

@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fxtracker/currency_details/widgets/rates_table.dart';
 import 'package:fxtracker/settings/cubit/settings_cubit.dart';
@@ -117,13 +118,14 @@ class _LineChartSample2State extends State<LineChartSample2> {
         BlocBuilder<SettingsCubit, SettingsState>(
           builder: (context, state) {
             final bool isCurved = state.isChartCurved;
+            final bool chartHapticFeedback = state.chartHapticFeedback;
             return AspectRatio(
               aspectRatio: 1.30,
               child: LineChart(
                 swapAnimationDuration:
                     const Duration(milliseconds: 300), // Optional
                 swapAnimationCurve: Curves.ease,
-                mainData(isCurved),
+                mainData(isCurved, chartHapticFeedback),
               ),
             );
           },
@@ -161,6 +163,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         selected: value == index,
         onSelected: (bool selected) {
           if (value != index) {
+            //HapticFeedback.mediumImpact();
             value = index;
             int days = 0;
             switch (index) {
@@ -195,7 +198,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         });
   }
 
-  LineChartData mainData(bool isCurved) {
+  LineChartData mainData(bool isCurved, bool chartHapticFeedback) {
     List<Color> gradientColors1 = [
       Colors.red.withOpacity(0.3),
       Colors.red.withOpacity(0.0)
@@ -239,11 +242,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
         ),
       ],
-      lineTouchData: lineTouchData(),
+      lineTouchData: lineTouchData(chartHapticFeedback),
     );
   }
 
-  LineTouchData lineTouchData() {
+  LineTouchData lineTouchData(bool chartHapticFeedback) {
     return LineTouchData(
       handleBuiltInTouches: true,
       getTouchedSpotIndicator:
@@ -283,15 +286,21 @@ class _LineChartSample2State extends State<LineChartSample2> {
           currentValue = flSpots.last.y.toString();
           effectiveDate = widget.rates.last.effectiveDate;
         } else {
-          final value = touchResponse.lineBarSpots!.first.y;
           final day = touchResponse.lineBarSpots!.first.x;
-          currentValue = value.toString();
-          effectiveDate = widget.rates[day.toInt() - 1].effectiveDate;
+          if (effectiveDate != widget.rates[day.toInt()].effectiveDate) {
+            final value = touchResponse.lineBarSpots!.first.y;
+            currentValue = value.toString();
+            effectiveDate = widget.rates[day.toInt()].effectiveDate;
+            if (chartHapticFeedback) {
+              HapticFeedback.mediumImpact();
+            }
+          }
         }
         if (event is FlTapUpEvent || event is FlLongPressEnd) {
           currentValue = flSpots.last.y.toString();
           effectiveDate = widget.rates.last.effectiveDate;
         }
+
         setState(() {});
       },
     );

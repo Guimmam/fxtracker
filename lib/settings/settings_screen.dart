@@ -20,11 +20,28 @@ class SettingsScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Zaookrąglij wykres "),
+                    const Text("Zaookrąglij rogi wykresu "),
                     Switch(
                       value: state.isChartCurved,
                       onChanged: (bool value) {
                         context.read<SettingsCubit>().toggleChartCurve();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Wibracja po naciśnięciu w wykres"),
+                    Switch(
+                      value: state.chartHapticFeedback,
+                      onChanged: (bool value) {
+                        context
+                            .read<SettingsCubit>()
+                            .toggleChartHapticFeedback();
                       },
                     ),
                   ],

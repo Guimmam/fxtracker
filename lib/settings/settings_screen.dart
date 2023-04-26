@@ -12,89 +12,128 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(title: const Text("Ustawienia")),
       body: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Zaookrąglij rogi wykresu "),
-                    Switch(
-                      value: state.isChartCurved,
-                      onChanged: (bool value) {
-                        context.read<SettingsCubit>().toggleChartCurve();
-                      },
-                    ),
-                  ],
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    "Wykres",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Wibracja po naciśnięciu w wykres"),
-                    Switch(
-                      value: state.chartHapticFeedback,
-                      onChanged: (bool value) {
-                        context
-                            .read<SettingsCubit>()
-                            .toggleChartHapticFeedback();
-                      },
-                    ),
-                  ],
+                Card(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SwitchListTile(
+                          contentPadding: const EdgeInsets.only(left: 10),
+                          title: const Text("Zaookrąglone rogi"),
+                          value: state.isChartCurved,
+                          onChanged: (bool value) {
+                            context.read<SettingsCubit>().toggleChartCurve();
+                          },
+                          secondary: const Icon(Icons.show_chart_rounded),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SwitchListTile(
+                          contentPadding: const EdgeInsets.only(left: 10),
+                          title: const Text("Wibracja po dotknięciu"),
+                          value: state.chartHapticFeedback,
+                          onChanged: (bool value) {
+                            context
+                                .read<SettingsCubit>()
+                                .toggleChartHapticFeedback();
+                          },
+                          secondary: const Icon(Icons.bolt_rounded),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  "Motyw aplikacji",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                SizedBox(height: 20),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    "Motyw",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
                 ),
-              ),
-              ListTile(
-                title: const Text("Jasny"),
-                leading: Radio(
-                  value: ThemeMode.light,
-                  groupValue: state.themeMode,
-                  onChanged: (value) {
-                    context.read<SettingsCubit>().setTheme(ThemeMode.light);
-                  },
+                Card(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ListTile(
+                            title: const Text("Jasny"),
+                            selected: state.themeMode == ThemeMode.light,
+                            onTap: () {
+                              context
+                                  .read<SettingsCubit>()
+                                  .setTheme(ThemeMode.light);
+                            },
+                            leading: Icon(Icons.light_mode),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ListTile(
+                            title: const Text("Ciemny"),
+                            leading: Icon(Icons.dark_mode),
+                            selected: state.themeMode == ThemeMode.dark,
+                            onTap: () {
+                              context
+                                  .read<SettingsCubit>()
+                                  .setTheme(ThemeMode.dark);
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ListTile(
+                            title: const Text("System"),
+                            leading: Icon(Icons.auto_awesome),
+                            selected: state.themeMode == ThemeMode.system,
+                            onTap: () {
+                              context
+                                  .read<SettingsCubit>()
+                                  .setTheme(ThemeMode.system);
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ListTile(
-                title: const Text("Ciemny"),
-                leading: Radio(
-                  value: ThemeMode.dark,
-                  groupValue: state.themeMode,
-                  onChanged: (value) {
-                    context.read<SettingsCubit>().setTheme(ThemeMode.dark);
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text("System"),
-                leading: Radio(
-                  value: ThemeMode.system,
-                  groupValue: state.themeMode,
-                  onChanged: (value) {
-                    context.read<SettingsCubit>().setTheme(ThemeMode.system);
-                  },
-                ),
-              ),
-              // Column(
-              //   children: [
-              //     Text("Ikony stworzone przez Freepik z"),
-              //     Image.asset(
-              //       "lib/assets/img/flaticon.png",
-              //       width: 200,
-              //     ),
-              //   ],
-              // )
-            ],
+                // Column(
+                //   children: [
+                //     Text("Ikony stworzone przez Freepik z"),
+                //     Image.asset(
+                //       "lib/assets/img/flaticon.png",
+                //       width: 200,
+                //     ),
+                //   ],
+                // )
+              ],
+            ),
           );
         },
       ),

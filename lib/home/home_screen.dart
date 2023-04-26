@@ -75,14 +75,15 @@ class Home extends StatelessWidget {
                   children: [
                     if (favoritesList.isNotEmpty)
                       const Padding(
-                        padding: EdgeInsets.only(top: 12, left: 12),
+                        padding: EdgeInsets.only(top: 12, left: 16),
                         child: Text(
                           "Ulubione",
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Card(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5),
@@ -102,14 +103,15 @@ class Home extends StatelessWidget {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(top: 12, left: 12),
+                      padding: EdgeInsets.only(top: 12, left: 16),
                       child: Text(
                         "Pozostałe",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Card(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5),

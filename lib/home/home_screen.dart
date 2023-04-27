@@ -20,12 +20,16 @@ class Home extends StatelessWidget {
     return BlocListener<InternetCubit, InternetState>(
       listener: (context, state) {
         if (state is InternetDisconnected) {
-          showSnackBar(context, "Nie masz połączenia z internetem", Colors.red,
-              const Duration(days: 5), Icons.cloud_off);
+          if (state.previousState is InternetConnected) {
+            ScaffoldMessenger.of(context).clearSnackBars();
+
+            showSnackBar(context, "Nie masz połączenia z internetem",
+                Colors.red, const Duration(days: 5), Icons.cloud_off);
+          }
         }
         if (state is InternetConnected) {
           if (state.previousState is InternetDisconnected) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).clearSnackBars();
 
             showSnackBar(context, "Znów masz połączenie z internetem",
                 Colors.green, const Duration(seconds: 5), Icons.cloud);
@@ -222,7 +226,7 @@ class CurrencyTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 160,
+                          width: 150,
                           child: Text(
                             currency.currency,
                             overflow: TextOverflow.fade,

@@ -63,7 +63,7 @@ class SettingsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 const Padding(
                   padding: EdgeInsets.only(left: 8.0),
                   child: Text(
@@ -85,7 +85,7 @@ class SettingsScreen extends StatelessWidget {
                                   .read<SettingsCubit>()
                                   .setTheme(ThemeMode.light);
                             },
-                            leading: Icon(Icons.light_mode),
+                            leading: const Icon(Icons.light_mode),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             )),
@@ -94,7 +94,7 @@ class SettingsScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(5.0),
                         child: ListTile(
                             title: const Text("Ciemny"),
-                            leading: Icon(Icons.dark_mode),
+                            leading: const Icon(Icons.dark_mode),
                             selected: state.themeMode == ThemeMode.dark,
                             onTap: () {
                               context
@@ -109,7 +109,7 @@ class SettingsScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(5.0),
                         child: ListTile(
                             title: const Text("System"),
-                            leading: Icon(Icons.auto_awesome),
+                            leading: const Icon(Icons.auto_awesome),
                             selected: state.themeMode == ThemeMode.system,
                             onTap: () {
                               context

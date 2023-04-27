@@ -32,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(5.0),
                         child: SwitchListTile(
                           contentPadding: const EdgeInsets.only(left: 10),
-                          title: const Text("Zaookrąglone rogi"),
+                          title: const Text("Zaokrąglone rogi"),
                           value: state.isChartCurved,
                           onChanged: (bool value) {
                             context.read<SettingsCubit>().toggleChartCurve();

@@ -45,28 +45,7 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
           softWrap: true,
           textAlign: TextAlign.center,
         ),
-        actions: [
-          BlocBuilder<SettingsCubit, SettingsState>(
-            builder: (context, state) {
-              return IconButton(
-                  onPressed: () {
-                    if (state.favoritesCurrencyList.contains(widget.code)) {
-                      context
-                          .read<SettingsCubit>()
-                          .removeFromFavorites(widget.code);
-                    } else {
-                      context.read<SettingsCubit>().addToFavorites(widget.code);
-                    }
-                  },
-                  icon: Icon(
-                    state.favoritesCurrencyList.contains(widget.code)
-                        ? Icons.star_rounded
-                        : Icons.star_outline_rounded,
-                    size: 30,
-                  ));
-            },
-          )
-        ],
+        actions: [addToFavoritesButton()],
       ),
       body: BlocBuilder<CurrencyDetailsBloc, CurrencyDetailsState>(
         builder: (context, state) {
@@ -79,7 +58,7 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
           if (state is RateLoaded) {
             List<Rate> rates = state.currencyRate.rates;
 
-            return LineChartSample2(
+            return ChartView(
               code: widget.code,
               rates: rates,
             );
@@ -92,6 +71,27 @@ class _CurrencyDetailsState extends State<CurrencyDetails> {
           return Container();
         },
       ),
+    );
+  }
+
+  BlocBuilder<SettingsCubit, SettingsState> addToFavoritesButton() {
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return IconButton(
+            onPressed: () {
+              if (state.favoritesCurrencyList.contains(widget.code)) {
+                context.read<SettingsCubit>().removeFromFavorites(widget.code);
+              } else {
+                context.read<SettingsCubit>().addToFavorites(widget.code);
+              }
+            },
+            icon: Icon(
+              state.favoritesCurrencyList.contains(widget.code)
+                  ? Icons.star_rounded
+                  : Icons.star_outline_rounded,
+              size: 30,
+            ));
+      },
     );
   }
 }

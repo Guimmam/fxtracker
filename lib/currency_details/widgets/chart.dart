@@ -3,26 +3,28 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fxtracker/currency_details/widgets/percentage_change.dart';
+
 import 'package:fxtracker/currency_details/widgets/rates_table.dart';
 import 'package:fxtracker/settings/cubit/settings_cubit.dart';
 import 'package:intl/intl.dart';
 
 import 'package:fxtracker/models/currency_rate.dart';
 
-class LineChartSample2 extends StatefulWidget {
+class ChartView extends StatefulWidget {
   final List<Rate> rates;
   final String code;
-  const LineChartSample2({
+  const ChartView({
     Key? key,
     required this.rates,
     required this.code,
   }) : super(key: key);
 
   @override
-  State<LineChartSample2> createState() => _LineChartSample2State();
+  State<ChartView> createState() => _ChartViewState();
 }
 
-class _LineChartSample2State extends State<LineChartSample2> {
+class _ChartViewState extends State<ChartView> {
   late String currentValue;
   late DateTime effectiveDate;
   List<FlSpot> flSpots = [];
@@ -78,41 +80,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
                 ],
               ),
             ),
-            Positioned(
-              top: 5,
-              right: 10,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: percentChange <= 0
-                      ? Colors.red.withOpacity(0.95)
-                      : Colors.green.withOpacity(0.95),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      percentChange <= 0
-                          ? Icons.trending_down_rounded
-                          : Icons.trending_up_rounded,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? Colors.white
-                          : Colors.black,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text("${percentChange.abs().toStringAsFixed(1)}%",
-                        style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ),
-            ),
+            PercentageChange(percentChange: percentChange),
           ],
         ),
         BlocBuilder<SettingsCubit, SettingsState>(

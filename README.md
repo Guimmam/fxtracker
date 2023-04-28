@@ -1,6 +1,6 @@
 # FxTracker - Currency Exchange Rates Tracking App
 
-[![FxTracker Presentation](https://user-images.githubusercontent.com/77902674/235178721-4ba4e70a-3db5-4d99-a023-11a39b431c11.png)](https://github.com/Guimmam/fxtracker)
+[![FxTracker Presentation](https://user-images.githubusercontent.com/77902674/235226926-eb08b9fa-6a5a-4a04-8414-4de19dbd7eb4.png)](https://github.com/Guimmam/fxtracker)
 
 FxTracker is a Flutter-based application that allows you to check the current currency exchange rates based on data provided by the National Bank of Poland (NBP). With this application, you can track currency rates and stay updated with their changes.
 
@@ -65,3 +65,5 @@ I welcome contributions to the FxTracker project. If you would like to improve s
 FxTracker is an open-source project, and I am not responsible for the accuracy of the currency data provided by the National Bank of Poland (NBP). The application serves as a visualization tool and does not guarantee the accuracy or timeliness of the data.
 
 Flags made by [Freepik](https://www.flaticon.com/packs/countrys-flags) from [www.flaticon.com](https://www.flaticon.com/).
+
+Mockups made with [studio.app-mockup](https://studio.app-mockup.com/)

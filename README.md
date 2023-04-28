@@ -63,3 +63,5 @@ I welcome contributions to the FxTracker project. If you would like to improve s
 ## Disclaimer
 
 FxTracker is an open-source project, and I am not responsible for the accuracy of the currency data provided by the National Bank of Poland (NBP). The application serves as a visualization tool and does not guarantee the accuracy or timeliness of the data.
+
+Flags made by [Freepik](https://www.flaticon.com/packs/countrys-flags) from [www.flaticon.com](https://www.flaticon.com/).

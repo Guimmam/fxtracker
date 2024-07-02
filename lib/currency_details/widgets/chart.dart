@@ -90,9 +90,8 @@ class _ChartViewState extends State<ChartView> {
             return AspectRatio(
               aspectRatio: 1.30,
               child: LineChart(
-                swapAnimationDuration:
-                    const Duration(milliseconds: 300), // Optional
-                swapAnimationCurve: Curves.ease,
+                duration: const Duration(milliseconds: 300), // Optional
+                curve: Curves.ease,
                 mainData(isCurved, chartHapticFeedback),
               ),
             );
